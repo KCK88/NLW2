@@ -1,29 +1,52 @@
 import React from 'react'
-
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg'
+import api from '../../services/api'
+
 import './styles.css'
 
+export interface Teacher {
+    
+    id: number,
+    name: string,
+    avatar: string,
+    whatsapp: string,
+    bio: string,
+    subject: string,
+    cost: Number
+}
 
-function TeacherItem() {
+interface TeacherItemProps {
+    teacher: Teacher
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+    function createNewConnection() {
+        api.post('connections', {
+            user_id: teacher.id,
+        })
+    }
     return (
         <article className="teacher-item">
                     <header>
-                        <img src="https://avatars2.githubusercontent.com/u/60490259?s=460&u=4b66d5991418569e2559347706f4b9cfd19fe7fd&v=4" alt="Claudio Meira"/>
+                        <img src={teacher.avatar} alt={teacher.name}/>
                         <div>
-                            <strong>Claudio Meira: </strong>
-                            <span>Física</span>
+                            <strong>{teacher.name} </strong>
+                            <span>{teacher.subject}</span>
                         </div>
                     </header>
-                    <p>Professor licesiado pela USP <br/> Neste tópico você pode encontrar perguntas e respostas para algumas dúvidas que possam surgir à respeito da sua graduação. <br/> Este é um tópico dinâmico. Na medida em que novas perguntas foram surgindo elas serão listadas aqui com as respectivas respostas.</p>
+                    <p>{teacher.bio}</p>
                     <footer>
                         <p>
                             Preço/hora: 
-                            <strong>R$ 55,00 </strong>
+                            <strong>R${teacher.cost}</strong>
                         </p>
-                        <button type="button">
+                        <a 
+                        target="blanck" 
+                        onClick={createNewConnection} 
+                        href={`https://wa.me/${teacher.whatsapp}`}>
                             <img src={whatsappIcon} alt="whatsapp"/>
                             Entrar em contato
-                        </button>
+                        </a>
                     </footer>
                 </article>
     );
